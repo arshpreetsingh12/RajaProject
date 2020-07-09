@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+	<div class="form py-2 text-center d-flex justify-content-center">
+		<form class="payment" action="{% url 'payment' %}" method="post">
+			{% csrf_token %}
+			<h2 class="text-center my-3">Payment Summary</h2>
+			<p class="text-left no-student">1 Student</p>
+			<p class="text-left bill-pay">$10/month/student</p>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<tr>
+						<th class="today text-left">
+							Today's Charge
+						</th>
+						<th class="text-right">
+							$10.00
+						</th>
+					</tr>
+					<tr>
+						<td colspan="2 text-center">
+							<p class="mb-0">Charges auto-renew</p>
+							<span class="d-block">(Unless cancelled before next renewal date)</span>
+							<span class="d-block">All amounts shown in U.S. dollars</span>
+						</td>
+					</tr>
+				</table>	
+			</div>
+			<h3 class="text-left">Billing Contact</h3>
+			<!-- <div class=""> -->
+			<input type="text" class="my-3 form-control" name="full-name" placeholder="Full Name" required>
+			<input type="text" class="my-3 form-control" name="address" placeholder="Address Line 1" required>
+			<input type="text" class="my-3 form-control" name="apt-suite" placeholder="Apt/Suite" required>
+			<div class="row grid my-3 m-0 p-0 dropd">
+				<div class="col-md-6 input mb-2 p-0">
+					<input type="text" class="form-control" name="city" placeholder="City" required>
+				</div>
+				<div class="col-md-6 mb-2 p-0">
+			
+					<select class="form-control states order-alpha" id="stateId" name="state" required>
+					{% for state in states %}
+						<option value="{{state.state_name}}">{{state.state_name}}</option>
+					{% endfor %}
+					</select>
+				</div>
+			</div>
+			<div class="row grid my-3 m-0 p-0">
+				<div class="col-md-6 input mb-2 p-0">
+					<input type="text" class="form-control" name="zip_code" required placeholder="Zip code" >
+				</div>
+				<div class="col-md-6 mb-2 p-0">
+					<input type="text" value="USA" placeholder="USA" class="form-control" readonly  name="country">
+				</div>
+			</div>  
+			<div class="custom-control custom-checkbox my-3 text-left">
+			    <input type="checkbox" class="custom-control-input" id="agree" name="example1">
+			    <label class="custom-control-label" for="agree">I agree to the Privacy Policy and Terms of Service</label>
+		  	</div>
+		  	<div class="imgbx text-right">
+		  		<img src="{% static 'images/card.png' %}">
+		  	</div>
+			<div class="button text-right">
+				<button class="btn" type="submit">Subscribe</button>
+			</div>
+			<!-- </div> -->
+		</form>
+	</div>
+
+  {% endblock %}
+

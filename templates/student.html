@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+	<div class="form text-center d-flex justify-content-center dropd">
+		<form action="{% url 'student_info' %}" method="post">
+			{% csrf_token %}
+			<h2 class="my-3">Student Details</h2>
+			<input type="text" class="my-3 form-control" name="student_name" required placeholder="Student Name">
+			<select class="form-control my-3 states order-alpha" required id="stateId" name="state">
+				<option disabled selected>Please select state</option>
+				{% for state in states %}
+				<option value="{{state.state_name}}">{{state.state_name}}</option>
+				{% endfor %}
+			</select>
+			<select name="country" class="form-control countries order-alpha" required id="countryId" name="country">
+				<option disabled selected>Please select country</option>
+				{% for country in countries %}
+				<option value="{{country.country_name}}">{{country.country_name}}</option>
+				{% endfor %}
+
+			</select>
+			
+		
+			<select class="form-control my-3" name="grade" required>
+				<option disabled selected>Grade + Level</option>
+				{% for grade in grades %}
+				<option value="{{grade.grade}}">{{grade.grade}}</option>
+				{% endfor %}
+
+			</select>
+			<div class="button text-right">
+				<button class="btn" type="submit">Next</button>
+			</div>
+		</form>
+	</div>
+{% endblock %}
+
+
+{% block extrascript %}
+<script type="text/javascript">
+	var user_country = "";
+</script>
+{% endblock %}
