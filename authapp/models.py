@@ -33,9 +33,9 @@ class StudentDetail(models.Model):
 	""" This table for store Student details. """
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	student_name = models.CharField(max_length=	200)
-	country = models.ForeignKey(Countries, null = True, on_delete=models.CASCADE)
-	state = models.ForeignKey(States, null = True, on_delete=models.CASCADE)
-	grade = models.ForeignKey(Grades, null = True, on_delete=models.CASCADE)
+	country = models.ForeignKey(Countries, null = True,blank = True, on_delete=models.CASCADE)
+	state = models.ForeignKey(States, null = True,blank = True, on_delete=models.CASCADE)
+	grade = models.ForeignKey(Grades, null = True,blank = True, on_delete=models.CASCADE)
 	created_at  = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
@@ -50,7 +50,7 @@ class BillingContact(models.Model):
 	full_name = models.CharField(max_length=200)
 	address_line1 = models.CharField(max_length=200)
 	country = models.CharField(max_length=200)
-	state = models.ForeignKey(States, null = True, on_delete=models.CASCADE)
+	state = models.ForeignKey(States, null = True, blank = True, on_delete=models.CASCADE)
 	city = models.CharField(max_length=200)
 	apt = models.CharField(max_length=200, null = True)
 	zip_code = models.CharField(max_length=200)
