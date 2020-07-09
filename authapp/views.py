@@ -128,3 +128,86 @@ class Payment(TemplateView):
 			messages.info(request,"Please complete first register step.")
 			return HttpResponseRedirect(reverse('register'))
 		
+
+
+""" 
+	This view for user login  
+								"""
+class LoginView(View):
+	template_name = "login.html"
+
+	def get(self,request):
+		return render(request,self.template_name,locals())
+
+	def post(self, request, *args, **kwargs):
+		email = request.POST.get('email')
+		password = request.POST.get('password')
+		try:
+			if email != "" and password != "": 
+				user= User.objects.get(Q(email = email)|Q(username = email))
+
+				if user.is_active == True:
+					userauth = authenticate(username=user.username, password=password)
+					if userauth:
+						login(request, user,backend='django.contrib.auth.backends.ModelBackend')	
+						return HttpResponseRedirect(reverse('add_user'))
+							
+					else:
+						messages.error(request,'Invalid credentials.')
+						return HttpResponseRedirect(reverse('web_login'))
+			else:
+				messages.error(request,'Incorrect email and password.')
+				return HttpResponseRedirect(reverse('web_login'))
+
+		except Exception as e:
+			print(str(e))
+			messages.info(request,'No such account exist.')
+			return HttpResponseRedirect(reverse('web_login'))
+
+
+
+"""
+	Add web user
+															  """
+class Payment(TemplateView):
+	template_name = 'payment.html'
+	def get(self, request, *args, **kwargs):
+		states = States.objects.all()
+		return render(request,self.template_name,locals())
+
+	def post(self,request):
+		full_name = request.POST.get('full-name')
+		address = request.POST.get('address')
+		apt_suite = request.POST.get('apt-suite')
+		city = request.POST.get('city')
+		country = request.POST.get('country')
+		state = request.POST.get('state')
+		zip_code = request.POST.get('zip_code')
+		user_id = request.session.get('user_id')
+		if user_id:	
+			student_obj = StudentDetail.objects.filter(user_id = user_id).last()
+			if student_obj:
+				try:
+					user = BillingContact.objects.get(info = student_obj)
+					messages.info(request,"Please Register with another email.")
+					return HttpResponseRedirect(reverse('register'))
+
+				except  BillingContact.DoesNotExist:
+					user = BillingContact.objects.create(
+							info = student_obj,
+							full_name = full_name, 
+							address_line1 = address, 
+							country = country,
+							state = state, 
+							city = city,
+							zip_code = zip_code
+						)
+					if 'user_id' in request.session:
+						del request.session["user_id"]
+					return HttpResponse("Registartion Successfully")
+			else:
+				messages.info(request,"Please complete second Student Details step.")
+				return HttpResponseRedirect(reverse('student_info'))
+		else:
+			messages.info(request,"Please complete first register step.")
+			return HttpResponseRedirect(reverse('register'))

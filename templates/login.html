@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+	<div class="form text-center d-flex justify-content-center">
+		<form action="{% url 'web_login' %}" method="post">
+			{% csrf_token %}
+			<h2 class="text-center my-3">Login</h2>
+			<input type="email" class="my-3 form-control email" name="email" placeholder="Email ID Field" required>
+			<input type="password" class="my-3 form-control password" name="password" placeholder="Password Field" required>
+			<button class="btn" type="submit">Login</button>
+		</form>
+	</div>
+
+  {% endblock %}
+
+
