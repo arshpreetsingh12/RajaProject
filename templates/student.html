@@ -6,7 +6,7 @@
 		<form action="{% url 'student_info' %}" method="post">
 			{% csrf_token %}
 			<h2 class="my-3">Student Details</h2>
-			<input type="text" class="my-3 form-control" name="student_name" required placeholder="Student Name">
+			<input type="text" class="my-3 form-control stu_name" name="student_name" required placeholder="Student Name">
 			<select class="form-control my-3 states order-alpha" required id="stateId" name="state">
 				<option disabled selected>Please select state</option>
 				{% for state in states %}
@@ -22,7 +22,7 @@
 			</select>
 			
 		
-			<select class="form-control my-3" name="grade" required>
+			<select class="form-control my-3" id="grade" name="grade" required>
 				<option disabled selected>Grade + Level</option>
 				{% for grade in grades %}
 				<option value="{{grade.grade}}">{{grade.grade}}</option>
@@ -38,7 +38,56 @@
 
 
 {% block extrascript %}
-<script type="text/javascript">
-	var user_country = "";
-</script>
-{% endblock %}
+  <script type="text/javascript">
+  	$('.btn').click(function(){
+ 	var stu_name = $('.stu_name').val();
+ 	var country = $('#countryId').val();
+ 	var state = $('#stateId').val();
+ 	var grade = $('#grade').val();
+ 	$('.pasword_error').html('');
+ 	// var status = $("#card_status").is(":checked");
+
+    var submit = true;
+
+    if (stu_name==''|| stu_name == null){
+        $('.stu_name').css('border', '1px solid red');
+        // $('.card_num_error').append("Pls enter card number");
+          submit = false;
+    }
+     else{
+    	$('.stu_name').css('border', '#ced4da');
+    	submit = true;
+    }
+    if (country==''|| country == null){
+        $('#countryId').css('border', '1px solid red');
+        // $('.card_name_error').append("Pls enter name");
+         submit = false;
+    }
+    else{
+    	$('#countryId').css('border', '#ced4da');
+    	submit = true;
+    }
+    if (state == ''|| state == null){
+        $('#stateId').css('border', '1px solid red');
+        // $('.exp_error').append("Pls enter date");
+          submit = false;
+    }
+    else{
+    	$('#stateId').css('border', '#ced4da');
+    	submit = true;
+   
+     }
+     if (grade==''|| grade == null){
+        $('#grade').css('border', '1px solid red');
+        // $('.card_num_error').append("Pls enter card number");
+          submit = false;
+    }
+     else{
+    	$('#grade').css('border', '#ced4da');
+    	submit = true;
+    }
+    return submit 
+})
+  </script>
+
+  {% endblock %}
