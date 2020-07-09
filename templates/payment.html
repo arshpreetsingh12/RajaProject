@@ -29,12 +29,12 @@
 			</div>
 			<h3 class="text-left">Billing Contact</h3>
 			<!-- <div class=""> -->
-			<input type="text" class="my-3 form-control" name="full-name" placeholder="Full Name" required>
-			<input type="text" class="my-3 form-control" name="address" placeholder="Address Line 1" required>
-			<input type="text" class="my-3 form-control" name="apt-suite" placeholder="Apt/Suite" required>
+			<input type="text" class="my-3 form-control full_name" name="full-name" placeholder="Full Name" required>
+			<input type="text" class="my-3 form-control address" name="address" placeholder="Address Line 1" required>
+			<input type="text" class="my-3 form-control apt" name="apt-suite" placeholder="Apt/Suite" required>
 			<div class="row grid my-3 m-0 p-0 dropd">
 				<div class="col-md-6 input mb-2 p-0">
-					<input type="text" class="form-control" name="city" placeholder="City" required>
+					<input type="text" class="form-control city" name="city" placeholder="City" required>
 				</div>
 				<div class="col-md-6 mb-2 p-0">
 			
@@ -47,7 +47,7 @@
 			</div>
 			<div class="row grid my-3 m-0 p-0">
 				<div class="col-md-6 input mb-2 p-0">
-					<input type="text" class="form-control" name="zip_code" required placeholder="Zip code" >
+					<input type="text" class="form-control zip_code" name="zip_code" required placeholder="Zip code" >
 				</div>
 				<div class="col-md-6 mb-2 p-0">
 					<input type="text" value="USA" placeholder="USA" class="form-control" readonly  name="country">
@@ -69,3 +69,88 @@
 
   {% endblock %}
 
+{% block extrascript %}
+  <script type="text/javascript">
+  	$('.btn').click(function(){
+ 	var full_name = $('.full_name').val();
+ 	var address = $('.address').val();
+ 	var apt = $('.apt').val();
+ 	var city = $('.city').val();
+ 	var state = $('#stateId').val();
+ 	var zip_code = $('.zip_code').val();
+ 	$('.pasword_error').html('');
+ 	// var status = $("#card_status").is(":checked");
+
+    var submit = true;
+
+    if (full_name==''|| full_name == null){
+        $('.full_name').css('border', '1px solid red');
+        // $('.card_num_error').append("Pls enter card number");
+          submit = false;
+    }
+     else{
+    	$('.full_name').css('border', '#ced4da');
+    	submit = true;
+    }
+    if (address==''|| address == null){
+        $('.address').css('border', '1px solid red');
+        // $('.card_name_error').append("Pls enter name");
+         submit = false;
+    }
+    else{
+    	$('.address').css('border', '#ced4da');
+    	submit = true;
+    }
+    if (apt == ''|| apt == null){
+        $('.apt').css('border', '1px solid red');
+        // $('.exp_error').append("Pls enter date");
+          submit = false;
+    }
+    else{
+    	$('.apt').css('border', '#ced4da');
+    	submit = true;
+   
+     }
+
+      if (country==''|| country == null){
+        $('#countryId').css('border', '1px solid red');
+        // $('.card_name_error').append("Pls enter name");
+         submit = false;
+    }
+    else{
+    	$('#countryId').css('border', '#ced4da');
+    	submit = true;
+    }
+    if (state == ''|| state == null){
+        $('#stateId').css('border', '1px solid red');
+        // $('.exp_error').append("Pls enter date");
+          submit = false;
+    }
+    else{
+    	$('#stateId').css('border', '#ced4da');
+    	submit = true;
+   
+     }
+     if (city==''|| city == null){
+        $('.city').css('border', '1px solid red');
+        // $('.card_num_error').append("Pls enter card number");
+          submit = false;
+    }
+     else{
+    	$('.city').css('border', '#ced4da');
+    	submit = true;
+    }
+    if (zip_code==''|| zip_code == null){
+        $('.zip_code').css('border', '1px solid red');
+        // $('.card_num_error').append("Pls enter card number");
+          submit = false;
+    }
+     else{
+    	$('.zip_code').css('border', '#ced4da');
+    	submit = true;
+    }
+    return submit 
+})
+  </script>
+
+  {% endblock %}

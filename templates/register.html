@@ -5,6 +5,7 @@
 	<div class="form text-center d-flex justify-content-center">
 		<form action="{% url 'register' %}" method="post">
 			{% csrf_token %}
+			<div class="pasword_error" style="color: red;"></div>
 			<h2 class="text-center my-3">Register</h2>
 			<input type="email" class="my-3 form-control email" name="email" placeholder="Email ID Field" required>
 			<input type="password" class="my-3 form-control password" name="password" placeholder="Password Field" required>
@@ -15,4 +16,59 @@
 
   {% endblock %}
 
+{% block extrascript %}
+  <script type="text/javascript">
+  	$('.btn').click(function(){
+ 	var email = $('.email').val();
+ 	var password = $('.password').val();
+ 	var confirm_password = $('.confirm-password').val();
+ 	$('.pasword_error').html('');
+ 	// var status = $("#card_status").is(":checked");
 
+    var submit = true;
+
+    if (email==''|| email == null){
+        $('.email').css('border', '1px solid red');
+        // $('.card_num_error').append("Pls enter card number");
+          submit = false;
+    }
+     else{
+    	$('.email').css('border', '#ced4da');
+    	submit = false;
+    }
+    if (password==''|| password == null){
+        $('.password').css('border', '1px solid red');
+        // $('.card_name_error').append("Pls enter name");
+         submit = false;
+    }
+    else{
+    	$('.password').css('border', '#ced4da');
+    	submit = true;
+    }
+    if (confirm_password == ''|| confirm_password == null){
+        $('.confirm-password').css('border', '1px solid red');
+        // $('.exp_error').append("Pls enter date");
+          submit = false;
+    }
+    else{
+    	$('.confirm-password').css('border', '#ced4da');
+    	submit = true;
+    }
+    if (password != "" && confirm_password != ""){
+	 	if (password != confirm_password){
+	 		 $('.confirm-password').css('border', '1px solid red');
+	 		 $('.password').css('border', '1px solid red');
+	 		 $('.pasword_error').append('Password does not match');
+	 		   submit = false;
+	 	}
+	 	else{
+	    	$('.confirm-password').css('border', '#ced4da');
+	    	$('.password').css('border', '#ced4da');
+	    	submit = true;
+	    }
+     }
+    return submit 
+})
+  </script>
+
+  {% endblock %}
