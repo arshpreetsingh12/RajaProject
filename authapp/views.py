@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.urls import reverse
 from .models import *
 from django.contrib import messages
-
+from django.db.models import Q
 
 
 """
@@ -58,9 +58,9 @@ class StudentInfo(TemplateView):
 
 	def post(self,request):
 		student_name = request.POST.get('student_name')
-		country = request.POST.get('country')
-		state = request.POST.get('state')
-		grade = request.POST.get('grade')
+		country_id = request.POST.get('country')
+		state_id = request.POST.get('state')
+		grade_id = request.POST.get('grade')
 		user_id = request.session.get('user_id')
 		if user_id:
 			try:
@@ -68,6 +68,10 @@ class StudentInfo(TemplateView):
 				messages.info(request,"Please Register with another email.")
 				return HttpResponseRedirect(reverse('register'))
 			except  StudentDetail.DoesNotExist:
+				country = Countries.objects.filter(id = country_id).last()
+				state = States.objects.filter(id = state_id).last()
+				grade = Grades.objects.filter(id = grade_id).last()
+
 				user = StudentDetail.objects.create(
 						user_id = user_id,
 						student_name = student_name, 
@@ -96,8 +100,8 @@ class Payment(TemplateView):
 		address = request.POST.get('address')
 		apt_suite = request.POST.get('apt-suite')
 		city = request.POST.get('city')
-		country = request.POST.get('country')
-		state = request.POST.get('state')
+		country_id = request.POST.get('country')
+		state_id = request.POST.get('state')
 		zip_code = request.POST.get('zip_code')
 		user_id = request.session.get('user_id')
 		if user_id:	
@@ -109,14 +113,16 @@ class Payment(TemplateView):
 					return HttpResponseRedirect(reverse('register'))
 
 				except  BillingContact.DoesNotExist:
+					state = States.objects.filter(id = state_id).last()
 					user = BillingContact.objects.create(
 							info = student_obj,
 							full_name = full_name, 
 							address_line1 = address, 
-							country = country,
+							country = country_id,
 							state = state, 
 							city = city,
-							zip_code = zip_code
+							zip_code = zip_code,
+							apt = apt_suite
 						)
 					if 'user_id' in request.session:
 						del request.session["user_id"]
@@ -145,12 +151,11 @@ class LoginView(View):
 		try:
 			if email != "" and password != "": 
 				user= User.objects.get(Q(email = email)|Q(username = email))
-
 				if user.is_active == True:
 					userauth = authenticate(username=user.username, password=password)
 					if userauth:
 						login(request, user,backend='django.contrib.auth.backends.ModelBackend')	
-						return HttpResponseRedirect(reverse('add_user'))
+						return HttpResponse("Successfully login")
 							
 					else:
 						messages.error(request,'Invalid credentials.')
@@ -165,49 +170,3 @@ class LoginView(View):
 			return HttpResponseRedirect(reverse('web_login'))
 
 
-
-"""
-	Add web user
-															  """
-class Payment(TemplateView):
-	template_name = 'payment.html'
-	def get(self, request, *args, **kwargs):
-		states = States.objects.all()
-		return render(request,self.template_name,locals())
-
-	def post(self,request):
-		full_name = request.POST.get('full-name')
-		address = request.POST.get('address')
-		apt_suite = request.POST.get('apt-suite')
-		city = request.POST.get('city')
-		country = request.POST.get('country')
-		state = request.POST.get('state')
-		zip_code = request.POST.get('zip_code')
-		user_id = request.session.get('user_id')
-		if user_id:	
-			student_obj = StudentDetail.objects.filter(user_id = user_id).last()
-			if student_obj:
-				try:
-					user = BillingContact.objects.get(info = student_obj)
-					messages.info(request,"Please Register with another email.")
-					return HttpResponseRedirect(reverse('register'))
-
-				except  BillingContact.DoesNotExist:
-					user = BillingContact.objects.create(
-							info = student_obj,
-							full_name = full_name, 
-							address_line1 = address, 
-							country = country,
-							state = state, 
-							city = city,
-							zip_code = zip_code
-						)
-					if 'user_id' in request.session:
-						del request.session["user_id"]
-					return HttpResponse("Registartion Successfully")
-			else:
-				messages.info(request,"Please complete second Student Details step.")
-				return HttpResponseRedirect(reverse('student_info'))
-		else:
-			messages.info(request,"Please complete first register step.")
-			return HttpResponseRedirect(reverse('register'))

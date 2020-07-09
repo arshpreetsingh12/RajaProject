@@ -10,13 +10,13 @@
 			<select class="form-control my-3 states order-alpha" required id="stateId" name="state">
 				<option disabled selected>Please select state</option>
 				{% for state in states %}
-				<option value="{{state.state_name}}">{{state.state_name}}</option>
+				<option value="{{state.id}}">{{state.state_name}}</option>
 				{% endfor %}
 			</select>
 			<select name="country" class="form-control countries order-alpha" required id="countryId" name="country">
 				<option disabled selected>Please select country</option>
 				{% for country in countries %}
-				<option value="{{country.country_name}}">{{country.country_name}}</option>
+				<option value="{{country.id}}">{{country.country_name}}</option>
 				{% endfor %}
 
 			</select>
@@ -25,7 +25,7 @@
 			<select class="form-control my-3" id="grade" name="grade" required>
 				<option disabled selected>Grade + Level</option>
 				{% for grade in grades %}
-				<option value="{{grade.grade}}">{{grade.grade}}</option>
+				<option value="{{grade.id}}">{{grade.grade}}</option>
 				{% endfor %}
 
 			</select>

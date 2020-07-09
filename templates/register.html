@@ -10,7 +10,11 @@
 			<input type="email" class="my-3 form-control email" name="email" placeholder="Email ID Field" required>
 			<input type="password" class="my-3 form-control password" name="password" placeholder="Password Field" required>
 			<input type="password" class="my-3 form-control confirm-password" name="confirm-password" placeholder="Confirm Password Field" required>
-			<button class="btn" type="submit">Register</button>
+			<button class="btn register_btn" type="submit">Register</button>
+      <div style="margin-top: 25px; margin-bottom: -8px;">OR</div>
+      <div>
+      <a href="{% url 'web_login' %}"><button class="btn" type="button">Login</button></a>
+      </div>
 		</form>
 	</div>
 
@@ -18,7 +22,7 @@
 
 {% block extrascript %}
   <script type="text/javascript">
-  	$('.btn').click(function(){
+  	$('.register_btn').click(function(){
  	var email = $('.email').val();
  	var password = $('.password').val();
  	var confirm_password = $('.confirm-password').val();
