@@ -54,8 +54,9 @@
 				</div>
 			</div>  
 			<div class="custom-control custom-checkbox my-3 text-left">
-			    <input type="checkbox" class="custom-control-input" id="agree" name="example1">
-			    <label class="custom-control-label" for="agree">I agree to the Privacy Policy and Terms of Service</label>
+			    <input type="checkbox" class="custom-control-input" value="True" name="terms"  required id="agree" name="example1">
+			    <label class="custom-control-label" id="check_terms" for="agree">I agree to the Privacy Policy and Terms of Service</label>
+          <div class="status_error" style="color: red;"></div>
 		  	</div>
 		  	<div class="imgbx text-right">
 		  		<img src="{% static 'images/card.png' %}">
@@ -78,9 +79,9 @@
  	var city = $('.city').val();
  	var state = $('#stateId').val();
  	var zip_code = $('.zip_code').val();
- 	$('.pasword_error').html('');
- 	// var status = $("#card_status").is(":checked");
-
+ 	$('.status_error').html('');
+ 	var terms = $('input[name="terms"]:checked').val();
+  console.log(terms,'================status')
     var submit = true;
 
     if (full_name==''|| full_name == null){
@@ -112,15 +113,7 @@
    
      }
 
-      if (country==''|| country == null){
-        $('#countryId').css('border', '1px solid red');
-        // $('.card_name_error').append("Pls enter name");
-         submit = false;
-    }
-    else{
-    	$('#countryId').css('border', '#ced4da');
-    	submit = true;
-    }
+     
     if (state == ''|| state == null){
         $('#stateId').css('border', '1px solid red');
         // $('.exp_error').append("Pls enter date");
@@ -149,6 +142,11 @@
     	$('.zip_code').css('border', '#ced4da');
     	submit = true;
     }
+    if (terms==''|| terms == null || terms == undefined){
+        $('.status_error').append("Please agree with terms");
+          submit = false;
+    }
+     
     return submit 
 })
   </script>
