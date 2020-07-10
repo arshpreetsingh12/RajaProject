@@ -5,10 +5,11 @@
 	<div class="form text-center d-flex justify-content-center">
 		<form action="{% url 'web_login' %}" method="post">
 			{% csrf_token %}
+			<div class="pasword_error" style="color: red;"></div>
 			<h2 class="text-center my-3">Login</h2>
 			<input type="email" class="my-3 form-control email" name="email" placeholder="Email ID Field" required>
-			<input type="password" class="my-3 form-control password" name="password" placeholder="Password Field" required>
-			<button class="btn" type="submit">Login</button>
+			<input type="password" class="my-3 form-control password" name="password" placeholder="Password Field" required maxlength="30">
+			<button class="btn login-btn" type="submit">Login</button>
 			<div style="margin-top: 25px; margin-bottom: -8px;">OR</div>
 			<div>
 			<a href="{% url 'register' %}"><button class="btn" type="button">Register</button></a>
@@ -19,3 +20,40 @@
   {% endblock %}
 
 
+{% block extrascript %}
+<script type="text/javascript">
+  $('.login-btn').click(function(){
+ 	var email = $('.email').val();
+ 	var password = $('.password').val();
+ 	$('.pasword_error').html('');
+    var email_pattern = /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i
+    var submit = true;
+
+    if (email==''|| email == null){
+        $('.email').css('border', '1px solid red');
+          submit = false;
+    }
+     else{
+    	$('.email').css('border', '#ced4da');
+    	submit = true;
+    }
+    if (email != "" || email == null){
+      
+      if(!email_pattern.test(email)){
+         $('.pasword_error').append('Please enter a valid email address');
+        }
+    }
+    if (password==''|| password == null){
+        $('.password').css('border', '1px solid red');
+         submit = false;
+    }
+    else{
+    	$('.password').css('border', '#ced4da');
+    	submit = true;
+    }
+
+     return submit 
+})
+  </script>
+
+  {% endblock %}

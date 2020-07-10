@@ -29,16 +29,17 @@
 			</div>
 			<h3 class="text-left">Billing Contact</h3>
 			<!-- <div class=""> -->
-			<input type="text" class="my-3 form-control full_name" name="full-name" placeholder="Full Name" required>
-			<input type="text" class="my-3 form-control address" name="address" placeholder="Address Line 1" required>
+			<input type="text" class="my-3 form-control full_name" name="full-name" placeholder="Full Name" required maxlength="30">
+			<input type="text" class="my-3 form-control address" name="address" placeholder="Address Line 1" required maxlength="35">
 			<input type="text" class="my-3 form-control apt" name="apt-suite" placeholder="Apt/Suite" required>
 			<div class="row grid my-3 m-0 p-0 dropd">
 				<div class="col-md-6 input mb-2 p-0">
-					<input type="text" class="form-control city" name="city" placeholder="City" required>
+					<input type="text" class="form-control city" name="city" placeholder="City" required  maxlength="25">
 				</div>
 				<div class="col-md-6 mb-2 p-0">
 			
 					<select class="form-control states order-alpha" id="stateId" name="state" required>
+             <option selected disabled>Select State</option>
 					{% for state in states %}
 						<option value="{{state.id}}">{{state.state_name}}</option>
 					{% endfor %}
@@ -47,7 +48,7 @@
 			</div>
 			<div class="row grid my-3 m-0 p-0">
 				<div class="col-md-6 input mb-2 p-0">
-					<input type="text" class="form-control zip_code" name="zip_code" required placeholder="Zip code" >
+					<input type="text" class="form-control zip_code" name="zip_code" required placeholder="Zip code" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="8">
 				</div>
 				<div class="col-md-6 mb-2 p-0">
 					<input type="text" value="USA" placeholder="USA" class="form-control" readonly  name="country">
@@ -56,7 +57,7 @@
 			<div class="custom-control custom-checkbox my-3 text-left">
 			    <input type="checkbox" class="custom-control-input" value="True" name="terms"  required id="agree" name="example1">
 			    <label class="custom-control-label" id="check_terms" for="agree">I agree to the Privacy Policy and Terms of Service</label>
-          <div class="status_error" style="color: red;"></div>
+          <div class="status_error" style="color: red; font-size: 13px;"></div>
 		  	</div>
 		  	<div class="imgbx text-right">
 		  		<img src="{% static 'images/card.png' %}">
@@ -81,12 +82,10 @@
  	var zip_code = $('.zip_code').val();
  	$('.status_error').html('');
  	var terms = $('input[name="terms"]:checked').val();
-  console.log(terms,'================status')
     var submit = true;
 
     if (full_name==''|| full_name == null){
         $('.full_name').css('border', '1px solid red');
-        // $('.card_num_error').append("Pls enter card number");
           submit = false;
     }
      else{
@@ -95,7 +94,6 @@
     }
     if (address==''|| address == null){
         $('.address').css('border', '1px solid red');
-        // $('.card_name_error').append("Pls enter name");
          submit = false;
     }
     else{
@@ -104,7 +102,6 @@
     }
     if (apt == ''|| apt == null){
         $('.apt').css('border', '1px solid red');
-        // $('.exp_error').append("Pls enter date");
           submit = false;
     }
     else{
@@ -116,7 +113,6 @@
      
     if (state == ''|| state == null){
         $('#stateId').css('border', '1px solid red');
-        // $('.exp_error').append("Pls enter date");
           submit = false;
     }
     else{
@@ -126,7 +122,6 @@
      }
      if (city==''|| city == null){
         $('.city').css('border', '1px solid red');
-        // $('.card_num_error').append("Pls enter card number");
           submit = false;
     }
      else{
@@ -135,7 +130,6 @@
     }
     if (zip_code==''|| zip_code == null){
         $('.zip_code').css('border', '1px solid red');
-        // $('.card_num_error').append("Pls enter card number");
           submit = false;
     }
      else{

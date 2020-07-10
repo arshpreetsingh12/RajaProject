@@ -6,7 +6,7 @@
 		<form action="{% url 'student_info' %}" method="post">
 			{% csrf_token %}
 			<h2 class="my-3">Student Details</h2>
-			<input type="text" class="my-3 form-control stu_name" name="student_name" required placeholder="Student Name">
+			<input type="text" class="my-3 form-control stu_name" maxlength="30" name="student_name" required placeholder="Student Name">
 			<select class="form-control my-3 states order-alpha" required id="stateId" name="state">
 				<option disabled selected>Please select state</option>
 				{% for state in states %}

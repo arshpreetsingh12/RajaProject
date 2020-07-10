@@ -8,8 +8,8 @@
 			<div class="pasword_error" style="color: red;"></div>
 			<h2 class="text-center my-3">Register</h2>
 			<input type="email" class="my-3 form-control email" name="email" placeholder="Email ID Field" required>
-			<input type="password" class="my-3 form-control password" name="password" placeholder="Password Field" required>
-			<input type="password" class="my-3 form-control confirm-password" name="confirm-password" placeholder="Confirm Password Field" required>
+			<input type="password" class="my-3 form-control password" name="password" placeholder="Password Field" required maxlength="30">
+			<input type="password" class="my-3 form-control confirm-password" name="confirm-password" placeholder="Confirm Password Field" required maxlength="30">
 			<button class="btn register_btn" type="submit">Register</button>
       <div style="margin-top: 25px; margin-bottom: -8px;">OR</div>
       <div>
@@ -28,21 +28,25 @@
  	var confirm_password = $('.confirm-password').val();
  	$('.pasword_error').html('');
  	// var status = $("#card_status").is(":checked");
-
+    var email_pattern = /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i
     var submit = true;
 
     if (email==''|| email == null){
         $('.email').css('border', '1px solid red');
-        // $('.card_num_error').append("Pls enter card number");
           submit = false;
     }
      else{
     	$('.email').css('border', '#ced4da');
-    	submit = false;
+    	submit = true;
+    }
+    if (email != "" || email == null){
+      
+      if(!email_pattern.test(email)){
+         $('.pasword_error').append('Please enter a valid email address');
+        }
     }
     if (password==''|| password == null){
         $('.password').css('border', '1px solid red');
-        // $('.card_name_error').append("Pls enter name");
          submit = false;
     }
     else{
@@ -51,7 +55,6 @@
     }
     if (confirm_password == ''|| confirm_password == null){
         $('.confirm-password').css('border', '1px solid red');
-        // $('.exp_error').append("Pls enter date");
           submit = false;
     }
     else{
