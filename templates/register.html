@@ -31,6 +31,10 @@
 
 {% block extrascript %}
   <script type="text/javascript">
+    msg =   localStorage.getItem('info_msg');
+    if (msg){
+        $('.pasword_error').html(msg);
+    }
   	$('.register_btn').click(function(){
  	var email = $('.email').val();
  	var password = $('.password').val();

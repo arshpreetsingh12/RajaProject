@@ -12,10 +12,12 @@
     </div>
   </div>
 
-	<div class="form text-center d-flex justify-content-center dropd">
-		<form action="{% url 'student_info' %}" method="post">
-			{% csrf_token %}
+	<div class="form text-center d-flex justify-content-center dropd" id="my_div">
+		<form  id="my_form"> 
+		
 			<h2 class="my-3">Student Details</h2>
+      <div class="add-new-row">
+        <div class="all_data">
 			<input type="text" class="my-3 form-control stu_name" maxlength="30" name="student_name" required placeholder="Student Name">
 			<select class="form-control my-3 states order-alpha" required id="stateId" name="state">
 				<option disabled selected>Please select state</option>
@@ -39,9 +41,12 @@
 				{% endfor %}
 
 			</select>
+      </div>
+      </div>
 			<div class="button d-flex justify-content-between">
-        <div class="" style="font-size: 60px; font-weight: 500;">+</div>
-				<button class="btn mt-0" type="submit">Next</button>
+        <div class="add-new-stu" style="font-size: 60px; font-weight: 500;">+</div>
+				<button class="btn mt-0" type="button">Next</button>
+
 			</div>
 		</form>
 	</div>
@@ -50,55 +55,105 @@
 
 {% block extrascript %}
   <script type="text/javascript">
-  	$('.btn').click(function(){
- 	var stu_name = $('.stu_name').val();
- 	var country = $('#countryId').val();
- 	var state = $('#stateId').val();
- 	var grade = $('#grade').val();
+
+
+
+  $('.add-new-stu').on('click',function(){
+    var gettable = $(this).closest('div').parent('div').parent('form').find('div').find('div input:text, select');
+    console.log(gettable[0],'----------------gettable')
+    // var gethtml = '<tr>' + gettable.find('tbody>tr:first').html() + '</tr>';
+    // $(gettable[0]).insertAfter('#my_form > div:first');
+     // $(document.createElement(gettable[0]));
+    $('#my_form > div:first').append('<div class ="all_data"><input type="text" class="my-3 form-control stu_name" maxlength="30" name="student_name" required placeholder="Student Name">' + ' <select class="form-control my-3 states order-alpha" required id="stateId" name="state"><option disabled selected>Please select state</option>' +
+       +  '{% for state in states %}' +
+       ' <option value="{{state.id}}">{{state.state_name}}</option>'
+         + '{% endfor %}'
+      + ' </select>' +
+        '<select name="country" class="form-control countries order-alpha" required id="countryId" name="country">' +
+        '<option disabled selected>Please select country</option>' +
+        '{% for country in countries %}' +
+       ' <option value="{{country.id}}">{{country.country_name}}</option>' +
+        '{% endfor %}' +
+
+     ' </select>'+
+      
+    
+      '<select class="form-control my-3" id="grade" name="grade" required>' +
+        '<option disabled selected>Grade + Level</option>'+
+       ' {% for grade in grades %}'+
+        '<option value="{{grade.id}}">{{grade.grade}}</option>'+
+        '{% endfor %}'+
+
+     ' </select></div>'
+      );
+    console.log("div add")
+  }); 
+
+  $('.btn').click(function(){
+ 	// var stu_name = $('.stu_name').val();
+ 	// var country = $('#countryId').val();
+ 	// var state = $('#stateId').val();
+ 	// var grade = $('#grade').val();
  	$('.pasword_error').html('');
  	// var status = $("#card_status").is(":checked");
 
     var submit = true;
 
-    if (stu_name==''|| stu_name == null){
-        $('.stu_name').css('border', '1px solid red');
-        // $('.card_num_error').append("Pls enter card number");
-          submit = false;
-    }
-     else{
-    	$('.stu_name').css('border', '#ced4da');
-    	submit = true;
-    }
-    if (country==''|| country == null){
-        $('#countryId').css('border', '1px solid red');
-        // $('.card_name_error').append("Pls enter name");
-         submit = false;
-    }
-    else{
-    	$('#countryId').css('border', '#ced4da');
-    	submit = true;
-    }
-    if (state == ''|| state == null){
-        $('#stateId').css('border', '1px solid red');
-        // $('.exp_error').append("Pls enter date");
-          submit = false;
-    }
-    else{
-    	$('#stateId').css('border', '#ced4da');
-    	submit = true;
-   
-     }
-     if (grade==''|| grade == null){
-        $('#grade').css('border', '1px solid red');
-        // $('.card_num_error').append("Pls enter card number");
-          submit = false;
-    }
-     else{
-    	$('#grade').css('border', '#ced4da');
-    	submit = true;
-    }
-    return submit 
-})
+    var product_data = [];
+    $('.all_data').each(function(){
+      var value = {}
+      var all_inputs = $(this).find('input');
+      $(all_inputs).each(function(){
+        var check_values = ($(this).val()).trim();
+        if (check_values == null || check_values == ""){
+          $(this).css('border','1px solid red');
+            submit = false;
+        }
+        else{
+          $(this).css('border','1px solid #ced4da');
+          value[this.name] = $(this).val();
+        }
+         });
+        var all_select = $(this).find('select');
+
+        $(all_select).each(function(){
+        var check_val = ($(this).val());
+        if (check_val == null || check_val == ""){
+          $(this).css('border','1px solid red');
+            submit = false;
+        }
+        else{
+          $(this).css('border','1px solid #ced4da');
+          value[this.name] = $(this).val();
+        }
+      });
+      product_data.push(value);
+    });
+
+  if (submit == true){
+    $.ajax({
+      url: '{% url "student_info" %}',
+      type: 'POST',
+      data:{
+        'student_data':(JSON.stringify(product_data)),
+        'csrfmiddlewaretoken':'{{ csrf_token }}',
+      },
+      success: function(response){
+        console.log(response.status,'=================')
+        if (response.status == true){
+          localStorage.setItem('success_msg',response.msg);
+          window.location = "{% url 'payment' %}"
+
+        }
+        else{
+          localStorage.setItem('info_msg',response.msg);
+          window.location = "{% url 'register' %}"
+        }
+
+      }
+    })
+  }
+});
   </script>
 
   {% endblock %}

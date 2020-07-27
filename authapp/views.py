@@ -8,7 +8,7 @@ from django.urls import reverse
 from .models import *
 from django.contrib import messages
 from django.db.models import Q
-
+import json
 
 """
 	First step of registration.
@@ -57,34 +57,41 @@ class StudentInfo(TemplateView):
 
 
 	def post(self,request):
-		student_name = request.POST.get('student_name')
-		country_id = request.POST.get('country')
-		state_id = request.POST.get('state')
-		grade_id = request.POST.get('grade')
+		response = {}
+		student_data = json.loads(request.POST.get('student_data'))
 		user_id = request.session.get('user_id')
+		
 		if user_id:
 			try:
 				user = StudentDetail.objects.get(user_id = user_id)
-				messages.info(request,"Please Register with another email.")
-				return HttpResponseRedirect(reverse('register'))
+				response['msg'] = "Please Register with another email."
+				response['status'] = False
+				return HttpResponse(json.dumps(response), content_type = 'application/json')
 			except  StudentDetail.DoesNotExist:
-				country = Countries.objects.filter(id = country_id).last()
-				state = States.objects.filter(id = state_id).last()
-				grade = Grades.objects.filter(id = grade_id).last()
+				for data in student_data:
+					country = Countries.objects.filter(id = int(data['country'])).last()
+					state = States.objects.filter(id = int(data['state'])).last()
+					grade = Grades.objects.filter(id = int(data['grade'])).last()
 
-				user = StudentDetail.objects.create(
-						user_id = user_id,
-						student_name = student_name, 
-						country = country, 
-						state = state, 
-						grade = grade
-					)
+					user = StudentDetail.objects.create(
+							user_id = user_id,
+							student_name = data['student_name'], 
+							country = country, 
+							state = state, 
+							grade = grade
+						)
 
-				return HttpResponseRedirect(reverse('payment'))
+				response['msg'] = "Student successfully added."
+				response['status'] = True
+				return HttpResponse(json.dumps(response), content_type = 'application/json')
+			except  Exception as e:
+				response['msg'] = "Please Register with another email."
+				response['status'] = False
+				return HttpResponse(json.dumps(response), content_type = 'application/json')
 		else:
-			messages.info(request,"Please complete first register step.")
-			return HttpResponseRedirect(reverse('register'))
-
+			response['msg'] = "Please complete first register step."
+			response['status'] = False
+			return HttpResponse(json.dumps(response), content_type = 'application/json')
 
 """
 	Last step of registration. Add Billing contact infomation. 

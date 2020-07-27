@@ -31,7 +31,7 @@ class Grades(models.Model):
 
 class StudentDetail(models.Model):
 	""" This table for store Student details. """
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE,null = True,blank = True)
 	student_name = models.CharField(max_length=	200)
 	country = models.ForeignKey(Countries, null = True,blank = True, on_delete=models.CASCADE)
 	state = models.ForeignKey(States, null = True,blank = True, on_delete=models.CASCADE)
