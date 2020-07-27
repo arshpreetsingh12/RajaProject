@@ -122,7 +122,7 @@ class Payment(TemplateView):
 				except  BillingContact.DoesNotExist:
 					state = States.objects.filter(id = state_id).last()
 					user = BillingContact.objects.create(
-							info = student_obj,
+							info_id = user_id,
 							full_name = full_name, 
 							address_line1 = address, 
 							country = country_id,
