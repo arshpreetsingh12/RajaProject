@@ -6,14 +6,17 @@
 		<form action="{% url 'web_login' %}" method="post">
 			{% csrf_token %}
 			<div class="pasword_error" style="color: red;"></div>
-			<h2 class="text-center my-3">Login</h2>
-			<input type="email" class="my-3 form-control email" name="email" placeholder="Email ID Field" required>
+			<h2 class="text-center my-3">Sign In</h2>
+      <p>If you have not registered an account yet, then please <a href="{% url 'register' %}">Sign Up</a> first</p>
+			<input type="email" class="mt-4 mb-3 form-control email" name="email" placeholder="Username\email address field" required>
 			<input type="password" class="my-3 form-control password" name="password" placeholder="Password Field" required maxlength="30">
 			<button class="btn login-btn" type="submit">Login</button>
-			<div style="margin-top: 25px; margin-bottom: -8px;">OR</div>
+      <p class="text-right mt-3"><a href="#">Forgot Password?</a></p>
+
+			<!-- <div style="margin-top: 25px; margin-bottom: -8px;">OR</div>
 			<div>
 			<a href="{% url 'register' %}"><button class="btn" type="button">Register</button></a>
-			</div>
+			</div> -->
 		</form>
 	</div>
 

@@ -36,21 +36,21 @@ section
 	font-weight: 500;
 	font-size: 18px;
 }
-form
+.register form
 {
 	width: 350px;
 	box-shadow: 0px 0px 10px rgba(0,0,0,.3);
-	padding: 30px 10px;
+	padding: 30px 20px;
 	border-radius: 5px;
 }
-form input::placeholder
+.register form input::placeholder
 {
 	text-align: center;
 	font-style: italic;
 	font-weight: 500;
 	font-size: 14px;
 }
-button
+.register button
 {
 	width: 150px;
 	height: 45px;
@@ -60,12 +60,12 @@ button
 	border:1px solid #27ae60 !important;
 	border-radius: 5px;
 }
-form button a
+.register form button a
 {
 	color: #27ae60 !important;
 	font-weight: 600;
 }
-form.payment
+.register form.payment
 {
 	width: 400px;
 	height: unset;
@@ -74,8 +74,8 @@ form.payment
 {
 	font-size: 13px;
 }
-p.no-student,
-p.bill-pay
+.register p.no-student,
+.register p.bill-pay
 {
 	font-weight: 600;
 	font-size: 15px;
@@ -101,6 +101,12 @@ p.bill-pay
 .register .grid .input
 {
 	padding-right: 10px !important;
+}
+/*20-07-2020*/
+.table .progress-bar
+{
+	height: 65px;
+	background: #20c997 !important;
 }
 @media only screen and (max-width: 760px)
 {

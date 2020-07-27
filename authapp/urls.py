@@ -7,6 +7,7 @@ urlpatterns = [
 	path('payment', Payment.as_view(), name="payment"),
 	path('login', LoginView.as_view(), name="web_login"),
 
+	path('student-dashboard', StudentDashboard.as_view(), name="student-dashboard"),
 
 
 

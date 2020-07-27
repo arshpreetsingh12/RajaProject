@@ -169,4 +169,7 @@ class LoginView(View):
 			messages.info(request,'No such account exist.')
 			return HttpResponseRedirect(reverse('web_login'))
 
-
+class StudentDashboard(TemplateView):
+	template_name = 'student_dashboard.html'
+	def get(self, request):
+		return render(request, self.template_name, locals())

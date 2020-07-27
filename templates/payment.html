@@ -2,6 +2,16 @@
 {% load static %}
 {% block content %}
 
+
+<div class="container-fluid">
+		<div class="step-block my-4 d-flex justify-content-center text-center">
+			<div class="steps">
+				<a href="{% url 'register' %}" class="text-muted">Regiter <i class="fas fa-chevron-right text-secondary mx-2"></i></a>
+				<a href="{% url 'student_info' %}">Student Details <i class="fas fa-chevron-right mx-2"></i></a>
+				<a href="{% url 'payment' %}">Payment </a>
+			</div>
+		</div>
+	</div>
 	<div class="form py-2 text-center d-flex justify-content-center">
 		<form class="payment" action="{% url 'payment' %}" method="post">
 			{% csrf_token %}

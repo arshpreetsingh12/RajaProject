@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+		<div class="table-responsive">
+			<table class="table table-bordered text-center">
+				<thead>
+					<th colspan="4" class="text-center">Topic</th>
+				</thead>
+				<tbody>
+					<tr class="text-center">
+						<th>Sub Topic Name</th>
+						<th>Review</th>
+						<th>Test 1</th>
+						<th>Test 2</th>
+					</tr>
+					<tr>
+						<td><p>Maths</p></td>
+						<td class="p-0">
+							<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
+							  aria-valuemin="0" aria-valuemax="100" style="width:70%">
+								<a href="#">Redo</a>
+							</div>
+						</td>
+						<td><a href="#">Retake</a></td>
+						<td><a href="#">Retake</a></td>
+					</tr>
+					<tr>
+						<td><p>English</p></td>
+						<td class="p-0">
+							<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
+							  aria-valuemin="0" aria-valuemax="100" style="width:70%">
+								<a href="#">Redo</a>
+							</div>
+						</td>
+						<td><a href="#">Retake</a></td>
+						<td><a href="#">Retake</a></td>
+					</tr>
+					<tr>
+						<td><p>Geography</p></td>
+						<td class="p-0">
+							<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
+							  aria-valuemin="0" aria-valuemax="100" style="width:30%">
+								<a href="#">Continue</a>
+							</div>
+						</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><p>History</p></td>
+						<td class="p-0"><a href="#">Start</a></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><p>Socialogy</p></td>
+						<td class="p-0"><a href="#">Start</a></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><p>Science</p></td>
+						<td class="p-0"><a href="#">Start</a></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><p>General Fitness</p></td>
+						<td class="p-0"><a href="#">Start</a></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+</div>
+  {% endblock %}
