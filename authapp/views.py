@@ -115,22 +115,25 @@ class Payment(TemplateView):
 			student_obj = StudentDetail.objects.filter(user_id = user_id).last()
 			if student_obj:
 				try:
-					user = BillingContact.objects.get(info = student_obj)
+					user = BillingContact.objects.get(info_id = user_id)
 					messages.info(request,"Please Register with another email.")
 					return HttpResponseRedirect(reverse('register'))
 
 				except  BillingContact.DoesNotExist:
 					state = States.objects.filter(id = state_id).last()
-					user = BillingContact.objects.create(
-							info_id = user_id,
-							full_name = full_name, 
-							address_line1 = address, 
-							country = country_id,
-							state = state, 
-							city = city,
-							zip_code = zip_code,
-							apt = apt_suite
-						)
+					main_user = User.objects.get(id = user_id)
+					for student in main_user.studentdetail_set.all():
+						user = BillingContact.objects.create(
+								info_id = user_id,
+								student_id = student.id,
+								full_name = full_name, 
+								address_line1 = address, 
+								country = country_id,
+								state = state, 
+								city = city,
+								zip_code = zip_code,
+								apt = apt_suite
+							)
 					if 'user_id' in request.session:
 						del request.session["user_id"]
 					return HttpResponse("Registartion Successfully")
@@ -162,6 +165,7 @@ class LoginView(View):
 					userauth = authenticate(username=user.username, password=password)
 					if userauth:
 						login(request, user,backend='django.contrib.auth.backends.ModelBackend')	
+						students = StudentDetail.objects.filter(user = user)
 						return HttpResponse("Successfully login")
 							
 					else:

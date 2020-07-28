@@ -47,6 +47,7 @@ class StudentDetail(models.Model):
 class BillingContact(models.Model):
 	""" This table for store Billing contact details. """
 	info = models.ForeignKey(User, on_delete=models.CASCADE,null = True,blank = True)
+	student = models.ForeignKey(StudentDetail, on_delete=models.CASCADE,null = True,blank = True)
 	full_name = models.CharField(max_length=200)
 	address_line1 = models.CharField(max_length=200)
 	country = models.CharField(max_length=200)
