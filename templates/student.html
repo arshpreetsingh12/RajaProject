@@ -19,21 +19,17 @@
       <div class="add-new-row">
         <div class="all_data">
 			<input type="text" class="my-3 form-control stu_name" maxlength="30" name="student_name" required placeholder="Student Name">
+      <select name="country" class="form-control countries order-alpha" required id="countryId" name="country" onchange="getval(this);">
+        <option disabled selected>Please select country</option>
+        {% for country in countries %}
+        <option value="{{country.id}}" data-id = "{{country.id}}">{{country.country_name}}</option>
+        {% endfor %}
+
+      </select>
 			<select class="form-control my-3 states order-alpha" required id="stateId" name="state">
 				<option disabled selected>Please select state</option>
-				{% for state in states %}
-				<option value="{{state.id}}">{{state.state_name}}</option>
-				{% endfor %}
-			</select>
-			<select name="country" class="form-control countries order-alpha" required id="countryId" name="country">
-				<option disabled selected>Please select country</option>
-				{% for country in countries %}
-				<option value="{{country.id}}">{{country.country_name}}</option>
-				{% endfor %}
-
 			</select>
 			
-		
 			<select class="form-control my-3" id="grade" name="grade" required>
 				<option disabled selected>Grade + Level</option>
 				{% for grade in grades %}
@@ -60,24 +56,18 @@
 
   $('.add-new-stu').on('click',function(){
     var gettable = $(this).closest('div').parent('div').parent('form').find('div').find('div input:text, select');
-    console.log(gettable[0],'----------------gettable')
     // var gethtml = '<tr>' + gettable.find('tbody>tr:first').html() + '</tr>';
     // $(gettable[0]).insertAfter('#my_form > div:first');
      // $(document.createElement(gettable[0]));
-    $('#my_form > div:first').append('<div class ="all_data"><input type="text" class="my-3 form-control stu_name" maxlength="30" name="student_name" required placeholder="Student Name">' + ' <select class="form-control my-3 states order-alpha" required id="stateId" name="state"><option disabled selected>Please select state</option>' +
-       +  '{% for state in states %}' +
-       ' <option value="{{state.id}}">{{state.state_name}}</option>'
-         + '{% endfor %}'
-      + ' </select>' +
-        '<select name="country" class="form-control countries order-alpha" required id="countryId" name="country">' +
+    $('#my_form > div:first').append('<div class ="all_data"><input type="text" class="my-3 form-control stu_name" maxlength="30" name="student_name" required placeholder="Student Name">' + 
+    '<select name="country" onchange="getval(this);" class="form-control countries order-alpha" required id="" name="country">' +
         '<option disabled selected>Please select country</option>' +
         '{% for country in countries %}' +
-       ' <option value="{{country.id}}">{{country.country_name}}</option>' +
+       ' <option value="{{country.id}}" data-id="{{country.id}}">{{country.country_name}}</option>' +
         '{% endfor %}' +
 
-     ' </select>'+
-      
-    
+     ' </select>'+ ' <select class="form-control my-3 states order-alpha" required id="stateId" name="state"><option disabled selected>Please select state</option> </select>' +
+     
       '<select class="form-control my-3" id="grade" name="grade" required>' +
         '<option disabled selected>Grade + Level</option>'+
        ' {% for grade in grades %}'+
@@ -90,13 +80,7 @@
   }); 
 
   $('.btn').click(function(){
- 	// var stu_name = $('.stu_name').val();
- 	// var country = $('#countryId').val();
- 	// var state = $('#stateId').val();
- 	// var grade = $('#grade').val();
  	$('.pasword_error').html('');
- 	// var status = $("#card_status").is(":checked");
-
     var submit = true;
 
     var product_data = [];
@@ -139,7 +123,6 @@
         'csrfmiddlewaretoken':'{{ csrf_token }}',
       },
       success: function(response){
-        console.log(response.status,'=================')
         if (response.status == true){
           localStorage.setItem('success_msg',response.msg);
           window.location = "{% url 'payment' %}"
@@ -154,6 +137,33 @@
     })
   }
 });
+
+
+  function getval(sel){
+    var country_id = sel.value
+    $.ajax({
+            url:"{% url 'get_states' %}",
+            type:'POST',
+            data:{
+               'csrfmiddlewaretoken':'{{ csrf_token }}',
+                'country_id':country_id
+               
+            },
+            success: function(response) {
+                if (response.status == true){
+                    for(i = 0; i < response.data.length; i++) { 
+                        $(sel).next('.states').append(`<option value="${response.data[i]}">${response.data[i]}</option>`);
+                    }
+                }
+                else{
+                    $(sel).next('.states').append(`<option value="">'Please wait.'</option>`);
+                }
+            }
+        });
+    };
+
+
+
   </script>
 
   {% endblock %}

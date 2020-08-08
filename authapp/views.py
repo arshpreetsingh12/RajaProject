@@ -50,7 +50,7 @@ class StudentInfo(TemplateView):
 	template_name = 'student.html'
 	def get(self, request, *args, **kwargs):
 		countries = Countries.objects.all()
-		states = States.objects.all()
+		# states = States.objects.all()
 		grades = Grades.objects.all()
 
 		return render(request,self.template_name,locals())
@@ -70,7 +70,7 @@ class StudentInfo(TemplateView):
 			except  StudentDetail.DoesNotExist:
 				for data in student_data:
 					country = Countries.objects.filter(id = int(data['country'])).last()
-					state = States.objects.filter(id = int(data['state'])).last()
+					state = States.objects.filter(state_name = data['state']).last()
 					grade = Grades.objects.filter(id = int(data['grade'])).last()
 
 					user = StudentDetail.objects.create(
@@ -99,7 +99,17 @@ class StudentInfo(TemplateView):
 class Payment(TemplateView):
 	template_name = 'payment.html'
 	def get(self, request, *args, **kwargs):
-		states = States.objects.all()
+		countries = Countries.objects.all()
+		try:
+			payment = Payments.objects.latest('payment_per_student')
+			print(payment,'--------------------payment')
+			user_id = request.session.get('user_id')
+			user = StudentDetail.objects.filter(user_id = user_id).count()
+			total_amount = float(payment.payment_per_student) * float(user)
+			print(total_amount,'==============total_amount')
+		except Exception as e:
+			pass
+		
 		return render(request,self.template_name,locals())
 
 	def post(self,request):
@@ -111,6 +121,8 @@ class Payment(TemplateView):
 		state_id = request.POST.get('state')
 		zip_code = request.POST.get('zip_code')
 		user_id = request.session.get('user_id')
+		total_amount = request.POST.get('total_amount')
+
 		if user_id:	
 			student_obj = StudentDetail.objects.filter(user_id = user_id).last()
 			if student_obj:
@@ -120,7 +132,9 @@ class Payment(TemplateView):
 					return HttpResponseRedirect(reverse('register'))
 
 				except  BillingContact.DoesNotExist:
-					state = States.objects.filter(id = state_id).last()
+					country = Countries.objects.filter(id = country_id).last()
+					state = States.objects.filter(state_name = state_id).last()
+					city_name = Cities.objects.filter(city_name = city).last()		
 					main_user = User.objects.get(id = user_id)
 					for student in main_user.studentdetail_set.all():
 						user = BillingContact.objects.create(
@@ -128,11 +142,12 @@ class Payment(TemplateView):
 								student_id = student.id,
 								full_name = full_name, 
 								address_line1 = address, 
-								country = country_id,
+								country = country,
 								state = state, 
-								city = city,
+								city = city_name,
 								zip_code = zip_code,
-								apt = apt_suite
+								apt = apt_suite,
+								amount = float(total_amount)
 							)
 					if 'user_id' in request.session:
 						del request.session["user_id"]
@@ -184,3 +199,28 @@ class StudentDashboard(TemplateView):
 	template_name = 'student_dashboard.html'
 	def get(self, request):
 		return render(request, self.template_name, locals())
+
+
+class GetStates(View):
+	def post(self, request):
+		response = {}
+		country_id = request.POST.get('country_id')
+		states = States.objects.filter(country_id = country_id)
+		all_states = []
+		response['status'] = True
+		for st in states:
+			all_states.append(st.state_name)
+		response['data'] = all_states
+		return HttpResponse(json.dumps(response),content_type="application/json")
+
+class GetCities(View):
+	def post(self, request):
+		response = {}
+		state_name = request.POST.get('state_name')
+		cities = Cities.objects.filter(state__state_name = state_name)
+		all_cities = []
+		response['status'] = True
+		for ct in cities:
+			all_cities.append(ct.city_name)
+		response['data'] = all_cities
+		return HttpResponse(json.dumps(response),content_type="application/json")

@@ -25,7 +25,7 @@
 							Today's Charge
 						</th>
 						<th class="text-right">
-							$10.00
+							${{total_amount}}
 						</th>
 					</tr>
 					<tr>
@@ -40,28 +40,36 @@
 			<h3 class="text-left">Billing Contact</h3>
 			<!-- <div class=""> -->
 			<input type="text" class="my-3 form-control full_name" name="full-name" placeholder="Full Name" required maxlength="30">
+			<input type="hidden" name="total_amount" value="{{total_amount}}">
 			<input type="text" class="my-3 form-control address" name="address" placeholder="Address Line 1" required maxlength="35">
 			<input type="text" class="my-3 form-control apt" name="apt-suite" placeholder="Apt/Suite" required>
 			<div class="row grid my-3 m-0 p-0 dropd">
 				<div class="col-md-6 input mb-2 p-0">
-					<input type="text" class="form-control city" name="city" placeholder="City" required  maxlength="25">
+					<!-- <input type="text" class="form-control city" name="city" placeholder="City" required  maxlength="25"> -->
+					<select class="form-control countries order-alpha" id="" name="country" required>
+             		<option selected disabled>Select country</option>
+					{% for country in countries %}
+						<option value="{{country.id}}" data-id="{{country.id}}">{{country.country_name}}</option>
+					{% endfor %}
+					</select>
+				<!-- </div> -->
 				</div>
 				<div class="col-md-6 mb-2 p-0">
 			
-					<select class="form-control states order-alpha" id="stateId" name="state" required>
-             <option selected disabled>Select State</option>
-					{% for state in states %}
-						<option value="{{state.id}}">{{state.state_name}}</option>
-					{% endfor %}
-					</select>
-				</div>
+					<select class="form-control my-3 states order-alpha" required id="stateId" name="state">
+             	<option selected disabled>Select State</option>
+	
+				</select>
+				<!-- </div> -->
 			</div>
 			<div class="row grid my-3 m-0 p-0">
 				<div class="col-md-6 input mb-2 p-0">
 					<input type="text" class="form-control zip_code" name="zip_code" required placeholder="Zip code" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="8">
 				</div>
 				<div class="col-md-6 mb-2 p-0">
-					<input type="text" value="USA" placeholder="USA" class="form-control" readonly  name="country">
+					<!-- <input type="text" value="USA" placeholder="USA" class="form-control" readonly  name="country"> -->
+					<select class="form-control my-3 city order-alpha" required id="" name="city">
+             	<option selected disabled>Select City</option>
 				</div>
 			</div>  
 			<div class="custom-control custom-checkbox my-3 text-left">
@@ -152,7 +160,57 @@
     }
      
     return submit 
-})
+});
+
+
+ $('.countries').change(function(e){
+    e.preventDefault();
+    var country_id = $('.countries option:selected').attr('data-id');
+    $.ajax({
+            url:"{% url 'get_states' %}",
+            type:'POST',
+            data:{
+               'csrfmiddlewaretoken':'{{ csrf_token }}',
+                'country_id':country_id
+               
+            },
+            success: function(response) {
+                if (response.status == true){
+                    for(i = 0; i < response.data.length; i++) { 
+                        $('.states').append(`<option value="${response.data[i]}" data-id="${response.data[i]}">${response.data[i]}</option>`);
+                    }
+                }
+                else{
+                   $('.states').append(`<option value="">'Please wait.'</option>`);
+                }
+            }
+        });
+    });
+
+ $('.states').change(function(e){
+    e.preventDefault();
+    var state_name = $('.states option:selected').attr('data-id');
+    $.ajax({
+            url:"{% url 'get_city' %}",
+            type:'POST',
+            data:{
+               'csrfmiddlewaretoken':'{{ csrf_token }}',
+                'state_name':state_name
+               
+            },
+            success: function(response) {
+                if (response.status == true){
+                    for(i = 0; i < response.data.length; i++) { 
+                        $('.city').append(`<option value="${response.data[i]}">${response.data[i]}</option>`);
+                    }
+                }
+                else{
+                   $('.city').append(`<option value="">'Please wait.'</option>`);
+                }
+            }
+        });
+    });
+
   </script>
 
   {% endblock %}

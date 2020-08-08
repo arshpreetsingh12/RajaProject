@@ -9,6 +9,9 @@ urlpatterns = [
 
 	path('student-dashboard', StudentDashboard.as_view(), name="student-dashboard"),
 
+	path('get-states', GetStates.as_view(), name="get_states"),
+	path('get-city', GetCities.as_view(), name="get_city"),
+
 
 
 ]
